@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://d2scn7vq3rybx"]
+
+[ext_resource type="Script" path="res://components/gun_control.gd" id="1_60xxf"]
+[ext_resource type="PackedScene" uid="uid://bfq5pbise3mar" path="res://assets/test_object/test_bullet.tscn" id="2_7bl07"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bln06"]
+albedo_color = Color(1, 0, 0.141176, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nwggf"]
+material = SubResource("StandardMaterial3D_bln06")
+
+[node name="Test Gun" type="Node3D"]
+script = ExtResource("1_60xxf")
+bullet = ExtResource("2_7bl07")
+muzzle_speed = 10
+millies_between_shot = 150
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.482201, 0, 0, 0, 0.395744, 0, 0, 0, 1.3571, 0, 0, 0)
+mesh = SubResource("BoxMesh_nwggf")
+
+[node name="Muzzle" type="Marker3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, -0.680851)
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

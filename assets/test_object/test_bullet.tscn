@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://bfq5pbise3mar"]
+
+[ext_resource type="Script" path="res://components/bullet_control.gd" id="1_m66s1"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ue6hp"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tvvng"]
+material = SubResource("StandardMaterial3D_ue6hp")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tmdp5"]
+
+[node name="Test Bullet" type="Node3D"]
+script = ExtResource("1_m66s1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+mesh = SubResource("BoxMesh_tvvng")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+shape = SubResource("BoxShape3D_tmdp5")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

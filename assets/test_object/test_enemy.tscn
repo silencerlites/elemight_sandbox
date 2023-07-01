@@ -1,0 +1,77 @@
+[gd_scene load_steps=9 format=3 uid="uid://beae7hyn2p5b1"]
+
+[ext_resource type="Script" path="res://components/enemy_control.gd" id="1_qsoc6"]
+[ext_resource type="PackedScene" uid="uid://dgrl5ouuoheq1" path="res://assets/test_object/test_slime.glb" id="2_1icba"]
+[ext_resource type="PackedScene" uid="uid://c03l3icnoidqu" path="res://assets/test_object/test_enemy_stats.tscn" id="2_67fhv"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1knhn"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_66p0q"]
+radius = 7.09542
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_pmfar"]
+radius = 1.0907
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_2jmda"]
+points = PackedVector3Array(0, 0.228, 0, 3.6, 0, -3.093, -3.6, 0, -3, 0, 0.222, 0, 3.6, 1.5, -3, -3.6, 1.5, -3)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_30wim"]
+points = PackedVector3Array(0, 0.228, 0, 9.5, 0, -6.5, -9.5, 0, -6.5, 0, 0.222, 0, 9.5, 2, -6.5, -9.5, 2, -6.5)
+
+[node name="Enemy" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.00626, 0)
+script = ExtResource("1_qsoc6")
+
+[node name="test_slime" parent="." instance=ExtResource("2_1icba")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -0.909659, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_1knhn")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." groups=["enemies"]]
+agent_height_offset = 0.15
+
+[node name="Stats" parent="." instance=ExtResource("2_67fhv")]
+
+[node name="patrol_timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Hearing Far" type="Area3D" parent="."]
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hearing Far"]
+shape = SubResource("SphereShape3D_66p0q")
+
+[node name="Hearing Closing" type="Area3D" parent="."]
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hearing Closing"]
+shape = SubResource("SphereShape3D_pmfar")
+
+[node name="Sight Close" type="Area3D" parent="."]
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sight Close"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.024128, 0.0427182, 0.0635939)
+shape = SubResource("ConvexPolygonShape3D_2jmda")
+
+[node name="Sight Far" type="Area3D" parent="."]
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sight Far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00424385, 0.0351219, 0.0059433)
+shape = SubResource("ConvexPolygonShape3D_30wim")
+
+[node name="Head" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.589832, 0)
+
+[connection signal="_enemy_die_signal" from="Stats" to="." method="_on_stats__enemy_die_signal"]
+[connection signal="timeout" from="patrol_timer" to="." method="_on_patrol_timer_timeout"]
+[connection signal="body_entered" from="Hearing Far" to="." method="_on_hearing_far_body_entered"]
+[connection signal="body_exited" from="Hearing Far" to="." method="_on_hearing_far_body_exited"]
+[connection signal="body_entered" from="Hearing Closing" to="." method="_on_hearing_closing_body_entered"]
+[connection signal="body_exited" from="Hearing Closing" to="." method="_on_hearing_closing_body_exited"]
+[connection signal="body_entered" from="Sight Close" to="." method="_on_sight_close_body_entered"]
+[connection signal="body_exited" from="Sight Close" to="." method="_on_sight_close_body_exited"]
+[connection signal="body_entered" from="Sight Far" to="." method="_on_sight_far_body_entered"]
+[connection signal="body_exited" from="Sight Far" to="." method="_on_sight_far_body_exited"]
